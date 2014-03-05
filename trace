@@ -1,0 +1,25 @@
+#!/bin/bash
+
+rm -f *.pov *.jpg
+
+# width=2000
+# height=1500
+
+  width=1024
+  height=768
+
+for chk in freq_vcd.fchk; do
+#   for mode in `seq -w 1 48`; do
+#   for mode in `seq -w 23 27`; do
+    for mode in 10 11 12; do
+        ./draw.py --chk=$chk --mode=$mode --output=${chk%.fchk}_$mode.pov
+    done
+done
+
+for file in *.pov; do
+    povray +I$file +O${file%\pov}png +Q9 +W$width +H$height
+    convert -trim ${file%\pov}png ${file%\pov}jpg
+    rm -f ${file%\pov}png
+done
+
+exit 0
